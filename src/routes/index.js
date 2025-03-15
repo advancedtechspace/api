@@ -12,6 +12,7 @@ import chatbot from "./chatbot/index.js";
 import cronus from "./cronus/index.js";
 import ats from "./ats/index.js";
 import panel from "./panel/index.js";
+import box from "./box/index.js";
 
 // EXPRESS CONFIG.
 const app = express();
@@ -30,5 +31,6 @@ app.use("/chatbot", chatbot);
 app.use("/cronus", cronus);
 app.use("/ats", ats);
 app.use("/panel", panel);
+app.use("/box", box);
 
 export default server;

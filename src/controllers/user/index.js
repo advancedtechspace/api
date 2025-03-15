@@ -31,6 +31,8 @@ export const login = async (req, res) => {
     data: req.body,
   };
 
+  console.log(d, app_id)
+
 
   try {
     let user = await User.findOne({ email, pass: hash(pass), app_id });
