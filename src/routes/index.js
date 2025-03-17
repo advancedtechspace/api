@@ -13,6 +13,7 @@ import cronus from "./cronus/index.js";
 import ats from "./ats/index.js";
 import panel from "./panel/index.js";
 import box from "./box/index.js";
+import house from "./house/index.js";
 
 // EXPRESS CONFIG.
 const app = express();
@@ -32,5 +33,6 @@ app.use("/cronus", cronus);
 app.use("/ats", ats);
 app.use("/panel", panel);
 app.use("/box", box);
+app.use("/house", house);
 
 export default server;
