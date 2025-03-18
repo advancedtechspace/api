@@ -7,7 +7,7 @@ server.listen(env.PORT, async () => {
   cron.schedule("*/3 * * * *", async () => {
     try {
       const response = await axios.get("https://api.advancedtechspace.com");
-      console.log(`Health check response: ${response.status}`);
+      // console.log(`Health check response: ${response.status}`);
     } catch (error) {
       console.error(`Health check error: ${error.message}`);
     }
