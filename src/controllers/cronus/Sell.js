@@ -36,7 +36,7 @@ export const getSalesPerMonth = async (req, res) => {
   const user = req.headers.user;
 
   try {
-    const year = 2024;
+    const year = 2025;
 
     const stock = await Stock.find({ user });
     const sales = await Sell.find({
