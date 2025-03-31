@@ -13,14 +13,14 @@ const router = express.Router();
 
 router.get("/", home);
 router.get("/cron", async (req, res) => {
-  const r = await sendMail(
-    ["sairessy@gmail.com"],
+  sendMail(
+    "sairessy@gmail.com",
     "Cron",
     `Hello, it is ${new Date().toLocaleDateString(
       "en-GB"
     )}, it comes from ${req.get("host")}.`
   );
-  res.json({ data: r });
+  res.json({});
 });
 router.get("/maputo/bairros/:distrito", getBairros);
 router.get("/maputo/distritos", getDistritos);

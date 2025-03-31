@@ -82,7 +82,7 @@ router.put("/asset/update", updateAsset);
 
 // Sales
 router.get("/sales/", getSales);
-router.get("/sales/per-month", getSalesPerMonth);
+router.get("/sales/per-month/:year", getSalesPerMonth);
 router.get("/sales/per-stock", getSalesPerStock);
 router.post("/sales/create", createSell);
 
