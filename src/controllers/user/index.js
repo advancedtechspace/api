@@ -31,18 +31,15 @@ export const login = async (req, res) => {
     data: req.body,
   };
 
-  console.log(d, app_id)
-
-
   try {
     let user = await User.findOne({ email, pass: hash(pass), app_id });
 
     if (!user) {
       res.status(409).json({ info: "Credenciais incorrectas!" });
-      await new Audit({
-        ...d,
-        success: false,
-      }).save();
+      // await new Audit({
+      //   ...d,
+      //   success: false,
+      // }).save();
     } else {
       await new Audit({
         ...d,
