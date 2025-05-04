@@ -1,5 +1,6 @@
 import { Asset } from "../../models/cronus/asset.js";
 import { Stock, StockCategoria } from "../../models/cronus/stock.js";
+import crypto from 'crypto';
 
 export const getStock = async (req, res) => {
   const user = req.headers.user;
@@ -36,6 +37,17 @@ export const getTotalStock = async (req, res) => {
 export const createStock = async (req, res) => {
   const data = req.body;
   const user = req.headers.user;
+
+  const digits = "0123456789".split("");
+  let code = "";
+
+  for (let i = 0; i < 8; i++) {
+    const index = crypto.randomInt(0, digits.length);
+    code += digits[index];
+    digits.splice(index, 1);
+  }
+
+  data.code = code;
 
   try {
     const stock = await new Stock({ ...data, user }).save();

@@ -1,5 +1,7 @@
 import { Sell } from "../../models/cronus/Sell.js";
 import { Stock } from "../../models/cronus/stock.js";
+import htmlPdf from "html-pdf";
+import { User } from "../../services/mongoose/index.js";
 
 export const createSell = async (req, res) => {
   const data = req.body;
@@ -12,6 +14,74 @@ export const createSell = async (req, res) => {
       created_at: new Date(),
       user,
     }).save();
+
+    const user_details = await User.findById({ _id: user });
+
+    let rows = new String();
+
+    for (const p of data.cart) {
+      const preco = parseFloat(p.product_label.split("(")[1].split(" ")[0]);
+      const subtotal = preco * parseFloat(p.quantidade);
+      rows += `<tr>
+      <td style='padding: 20px;'>${p.product_label}</td>
+      <td style='padding: 20px;'>${p.quantidade}</td>
+      <td style='padding: 20px;'>${subtotal}</td>
+    </tr>`;
+    }
+
+    //
+    const primary_color = "indigo";
+
+    const date = new Date();
+
+    const formatador = new Intl.DateTimeFormat("pt-BR", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
+    });
+
+    const dataFormatada = formatador.format(date);
+
+    const html = `<body style='font-family: arial; padding: 50px; box-sizing: content-box;'>
+    <div style='text-align: center; background: ${primary_color}; color: #fff; padding: 10px'>
+      <h1>${user_details.name}</h1>
+      <p>${user_details.localizacao} - ${user_details.tel}</p>
+    </div>
+    <div style='padding: 20px;'>
+      <h1 style='font-size: 48px;'>Factura</h1>
+      <p><b>ID: </b>${sell._id}</p>
+      <p><b>Data: </b>${dataFormatada}</p>
+    </div>
+    <table width='100%'>
+      <thead style='background: ${primary_color}; color: #fff;'>
+        <th style='padding: 20px;'>Producto</th>
+        <th style='padding: 20px;'>Qtd.</th>
+        <th style='padding: 20px;'>Subtotal</th>
+      </thead>
+      <tbody>
+        <trows>
+          ${rows}
+        <trows>
+      </tbody>
+    </table>
+    <h2 style='background: ${primary_color}; color: #fff; padding: 5px; width: 40%;'>Total: ${data.valor_total} MT</h2>
+    <footer style='position: absolute; bottom: 20px; width: 100%; right: 70px;'>
+      <p style='text-align: right;'>Powered by <span style='color: ${primary_color}'>
+        <b>cronus.advancedtechspace.com</span></b>
+      </p>
+    </footer>
+  </body>`;
+
+    htmlPdf.create(html, {}).toFile(`./static/cronus-facturas/${sell._id}.pdf`, function (err, res) {
+      if (err) return console.log(err);
+      console.log(res);
+    });
+
+    //
+
     res.json(sell);
   } catch (error) {
     console.log(error);
@@ -37,7 +107,6 @@ export const getSalesPerMonth = async (req, res) => {
   const year = req.params.year;
 
   try {
-
     const stock = await Stock.find({ user });
     const sales = await Sell.find({
       created_at: {
@@ -72,7 +141,7 @@ export const getSalesPerMonth = async (req, res) => {
 export const getSalesPerStock = async (req, res) => {
   const user = req.headers.user;
 
-  let stock = await Stock.find({ user }).sort({desc: 1});
+  let stock = await Stock.find({ user }).sort({ desc: 1 });
   const sales = await Sell.find({ user });
 
   stock = stock.map(
@@ -99,6 +168,6 @@ export const getSalesPerStock = async (req, res) => {
       }
     }
   }
- 
+
   res.json(stock);
 };

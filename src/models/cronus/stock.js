@@ -15,6 +15,10 @@ export const Stock = mongoose.model(
     {
       created_at: Date,
       created_by: String,
+      code: {
+        type: String,
+        unique: true,
+      }
     },
     { strict: false }
   )
