@@ -45,35 +45,44 @@ export const createSell = async (req, res) => {
 
     const dataFormatada = formatador.format(date);
 
-    const html = `<body style='font-family: arial; padding: 50px; box-sizing: content-box;'>
-    <div style='text-align: center; background: ${primary_color}; color: #fff; padding: 10px'>
-      <h1>${user_details.name}</h1>
-      <p>${user_details.localizacao} - ${user_details.tel}</p>
-    </div>
-    <div style='padding: 20px;'>
-      <h1 style='font-size: 48px;'>Factura</h1>
-      <p><b>ID: </b>${sell._id}</p>
-      <p><b>Data: </b>${dataFormatada}</p>
-    </div>
-    <table width='100%'>
-      <thead style='background: ${primary_color}; color: #fff;'>
-        <th style='padding: 20px;'>Producto</th>
-        <th style='padding: 20px;'>Qtd.</th>
-        <th style='padding: 20px;'>Subtotal</th>
-      </thead>
-      <tbody>
-        <trows>
-          ${rows}
-        <trows>
-      </tbody>
-    </table>
-    <h2 style='background: ${primary_color}; color: #fff; padding: 5px; width: 40%;'>Total: ${data.valor_total} MT</h2>
-    <footer style='position: absolute; bottom: 20px; width: 100%; right: 70px;'>
-      <p style='text-align: right;'>Powered by <span style='color: ${primary_color}'>
-        <b>cronus.advancedtechspace.com</span></b>
-      </p>
-    </footer>
-  </body>`;
+    const html = `<!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Document</title>
+    </head>
+    
+    <body style='font-family: arial; padding: 50px; box-sizing: content-box;'>
+      <div style='text-align: center; background: ${primary_color}; color: #fff; padding: 10px'>
+        <h1>${user_details.name}</h1>
+        <p>${user_details.localizacao} - ${user_details.tel}</p>
+      </div>
+      <div style='padding: 20px;'>
+        <h1 style='font-size: 48px;'>Factura</h1>
+        <p><b>ID: </b>${sell._id}</p>
+        <p><b>Data: </b>${dataFormatada}</p>
+      </div>
+      <table width='100%'>
+        <thead style='background: ${primary_color}; color: #fff;'>
+          <th style='padding: 20px;'>Producto</th>
+          <th style='padding: 20px;'>Qtd.</th>
+          <th style='padding: 20px;'>Subtotal</th>
+        </thead>
+        <tbody>
+          <trows>
+            ${rows}
+          <trows>
+        </tbody>
+      </table>
+      <h2 style='background: ${primary_color}; color: #fff; padding: 5px; width: 40%;'>Total: ${data.valor_total} MT</h2>
+      <footer style='position: absolute; bottom: 20px; width: 100%; right: 70px;'>
+        <p style='text-align: right;'>Powered by <span style='color: ${primary_color}'>
+          <b>cronus.advancedtechspace.com</span></b>
+        </p>
+      </footer>
+    </body>
+    </html>`;
 
     htmlPdf.create(html, {}).toFile(`./static/cronus-facturas/${sell._id}.pdf`, function (err, res) {
       if (err) return console.log(err);
