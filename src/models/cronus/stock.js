@@ -15,6 +15,7 @@ export const Stock = mongoose.model(
     {
       created_at: Date,
       created_by: String,
+      quantidade: Number,
       code: {
         type: String,
         unique: true,

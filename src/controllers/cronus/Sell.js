@@ -7,6 +7,17 @@ export const createSell = async (req, res) => {
   const data = req.body;
   const user = req.headers.user;
 
+  for (const c of data.cart) {
+    await Stock.findOneAndUpdate(
+      { _id: c.product },
+      { $inc: { quantidade: -1 * parseFloat(c.quantidade) } },
+      data,
+      {
+        new: true,
+      }
+    );
+  }
+
   try {
     const sell = await new Sell({
       cart: data.cart,
@@ -77,17 +88,20 @@ export const createSell = async (req, res) => {
       </table>
       <h2 style='background: ${primary_color}; color: #fff; padding: 5px; width: 40%;'>Total: ${data.valor_total} MT</h2>
       <footer style='position: absolute; bottom: 20px; width: 100%; right: 70px;'>
-        <p style='text-align: right;'>Powered by <span style='color: ${primary_color}'>
-          <b>cronus.advancedtechspace.com</span></b>
+        <p style='text-align: right;'>
+          <!--Powered by <span style='color: ${primary_color}'>
+          <b>${user_details.name}</span></b>-->
         </p>
       </footer>
     </body>
     </html>`;
 
-    htmlPdf.create(html, {}).toFile(`./static/cronus-facturas/${sell._id}.pdf`, function (err, res) {
-      if (err) return console.log(err);
-      console.log(res);
-    });
+    htmlPdf
+      .create(html, {})
+      .toFile(`./static/cronus-facturas/${sell._id}.pdf`, function (err, res) {
+        if (err) return console.log(err);
+        console.log(res);
+      });
 
     //
 
