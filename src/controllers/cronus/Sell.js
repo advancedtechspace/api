@@ -21,6 +21,7 @@ export const createSell = async (req, res) => {
   try {
     const sell = await new Sell({
       cart: data.cart,
+      valor_total: data.valor_total,
       bi: data.bi,
       created_at: new Date(),
       user,
@@ -61,7 +62,7 @@ export const createSell = async (req, res) => {
     <head>
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>Document</title>
+      <title>Factura</title>
     </head>
     
     <body style='font-family: arial; padding: 50px; box-sizing: content-box;'>
@@ -111,6 +112,97 @@ export const createSell = async (req, res) => {
     res.status(409).json({});
   }
 };
+
+export const getFactura = async (req, res) => {
+  const id = req.params.id;
+  const user = req.headers.user;
+
+  try {
+
+    const user_details = await User.findById({ _id: user });
+    const data = await Sell.findById({ _id: id });
+
+    let rows = new String();
+
+    for (const p of data.cart) {
+      const preco = parseFloat(p.product_label.split("(")[1].split(" ")[0]);
+      const subtotal = preco * parseFloat(p.quantidade);
+      rows += `<tr>
+      <td style='padding: 20px;'>${p.product_label}</td>
+      <td style='padding: 20px;'>${p.quantidade}</td>
+      <td style='padding: 20px;'>${subtotal}</td>
+    </tr>`;
+    }
+
+    //
+    const primary_color = "indigo";
+
+    const date = data.created_at;
+
+    const formatador = new Intl.DateTimeFormat("pt-BR", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
+    });
+
+    const dataFormatada = formatador.format(date);
+
+    const html = `<!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Factura</title>
+    </head>
+    
+    <body style='font-family: arial; padding: 50px; box-sizing: content-box;'>
+      <div style='text-align: center; background: ${primary_color}; color: #fff; padding: 10px'>
+        <h1>${user_details.name}</h1>
+        <p>${user_details.localizacao} - ${user_details.tel}</p>
+      </div>
+      <div style='padding: 20px;'>
+        <h1 style='font-size: 48px;'>Factura</h1>
+        <p><b>ID: </b>${id}</p>
+        <p><b>Data: </b>${dataFormatada}</p>
+      </div>
+      <table width='100%'>
+        <thead style='background: ${primary_color}; color: #fff;'>
+          <th style='padding: 20px;'>Producto</th>
+          <th style='padding: 20px;'>Qtd.</th>
+          <th style='padding: 20px;'>Subtotal</th>
+        </thead>
+        <tbody>
+          <trows>
+            ${rows}
+          <trows>
+        </tbody>
+      </table>
+      <h2 style='background: ${primary_color}; color: #fff; padding: 5px; width: 40%;'>Total: ${data.valor_total} MT</h2>
+      <footer style='position: absolute; bottom: 20px; width: 100%; right: 70px;'>
+        <p style='text-align: right;'>
+          <!--Powered by <span style='color: ${primary_color}'>
+          <b>${user_details.name}</span></b>-->
+        </p>
+      </footer>
+    </body>
+    </html>`;
+
+    htmlPdf
+      .create(html, {})
+      .toFile(`./static/cronus-facturas/${id}.pdf`, function (err, res) {
+        if (err) return console.log(err);
+        console.log(res);
+      });
+
+      res.redirect(`https://api.advancedtechspace.com/cronus-facturas/${id}.pdf`);
+  } catch (error) {
+    console.log(error);
+    res.status(409).json({error});
+  }
+}
 
 export const getSales = async (req, res) => {
   const user = req.headers.user;

@@ -35,6 +35,7 @@ import {
 } from "../../controllers/cronus/Asset.js";
 import {
   createSell,
+  getFactura,
   getSales,
   getSalesPerMonth,
   getSalesPerStock,
@@ -85,5 +86,6 @@ router.get("/sales/", getSales);
 router.get("/sales/per-month/:year", getSalesPerMonth);
 router.get("/sales/per-stock", getSalesPerStock);
 router.post("/sales/create", createSell);
+router.get("/sales/factura/:id", getFactura);
 
 export default router;
