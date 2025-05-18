@@ -115,7 +115,9 @@ export const createSell = async (req, res) => {
 
 export const getFactura = async (req, res) => {
   const id = req.params.id;
-  const user = req.headers.user;
+  const user = req.query.u;
+
+  console.log('==============================')
 
   try {
 
@@ -197,6 +199,7 @@ export const getFactura = async (req, res) => {
         console.log(res);
       });
 
+      // res.redirect(`http://localhost:8000/cronus-facturas/${id}.pdf`);
       res.redirect(`https://api.advancedtechspace.com/cronus-facturas/${id}.pdf`);
   } catch (error) {
     console.log(error);
