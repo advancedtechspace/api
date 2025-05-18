@@ -15,3 +15,7 @@ export const hash = (data) => {
 export const mongoConnectionString = env.LOCAL
   ? "mongodb://127.0.0.1:27017/test"
   : `mongodb+srv://sairessy:${env.MONGO_PASS}@cluster0.bpljm3t.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
+
+export const api_url = env.LOCAL
+  ? "http://localhost:8000"
+  : "api.advancedtechspace.com";

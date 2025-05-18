@@ -2,6 +2,7 @@ import { Sell } from "../../models/cronus/Sell.js";
 import { Stock } from "../../models/cronus/stock.js";
 import htmlPdf from "html-pdf";
 import { User } from "../../services/mongoose/index.js";
+import { api_url } from "../../config/index.js";
 
 export const createSell = async (req, res) => {
   const data = req.body;
@@ -117,8 +118,6 @@ export const getFactura = async (req, res) => {
   const id = req.params.id;
   const user = req.query.u;
 
-  console.log('==============================')
-
   try {
 
     const user_details = await User.findById({ _id: user });
@@ -199,8 +198,7 @@ export const getFactura = async (req, res) => {
         console.log(res);
       });
 
-      // res.redirect(`http://localhost:8000/cronus-facturas/${id}.pdf`);
-      res.redirect(`https://api.advancedtechspace.com/cronus-facturas/${id}.pdf`);
+      res.redirect(`${api_url}/cronus-facturas/${id}.pdf`);
   } catch (error) {
     console.log(error);
     res.status(409).json({error});
