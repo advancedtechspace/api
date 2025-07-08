@@ -2,3 +2,4 @@ node_modules
 util
 .env
 *.db
+./static/cronus-facturas/*
