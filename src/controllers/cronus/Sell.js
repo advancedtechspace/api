@@ -8,16 +8,16 @@ export const createSell = async (req, res) => {
   const data = req.body;
   const user = req.headers.user;
 
-  for (const c of data.cart) {
-    await Stock.findOneAndUpdate(
-      { _id: c.product },
-      { $inc: { quantidade: -1 * parseFloat(c.quantidade) } },
-      data,
-      {
-        new: true,
-      }
-    );
-  }
+  // for (const c of data.cart) {
+  //   await Stock.findOneAndUpdate(
+  //     { _id: c.product },
+  //     { $inc: { quantidade: -1 * parseFloat(c.quantidade) } },
+  //     data,
+  //     {
+  //       new: true,
+  //     }
+  //   );
+  // }
 
   try {
     const sell = await new Sell({
